@@ -15,10 +15,12 @@ load_dotenv()
 # Environment variables
 baseUrl = "https://api.clashroyale.com/v1"
 clan_tag = os.getenv('CLAN_TAG')
+player_id = os.getenv('PLAYER_ID')
 
 # Debugging: Print environment variables to verify
 print(f"CLAN_TAG: {clan_tag}")
 print(f"CLAN_SECRET: {os.getenv('CLAN_SECRET')}")
+print(f"PLAYER_ID: {player_id}")
 
 # Function to retrieve clan information
 def get_clan_info():
@@ -32,6 +34,50 @@ def get_clan_info():
     response = urllib.request.urlopen(request).read().decode("utf-8")
     data = json.loads(response)
     return data
+
+# Function to retrieve and print player battle log
+def get_player_battlelog(player_id):
+    endpoint = f"/players/%23{player_id}/battlelog"
+    request = get_request(endpoint, baseUrl)
+    
+    # Debugging: Print the request URL and headers
+    print(f"Request URL: {request.full_url}")
+    print(f"Request Headers: {request.headers}")
+
+    response = urllib.request.urlopen(request).read().decode("utf-8")
+    data = json.loads(response)
+    
+    # Print the battle log data
+    print("Player Battle Log")
+    print("=================")
+    print(json.dumps(data, indent=4))
+
+    # Summarize and print each battle
+    summaries = summarize_battles(data)
+    for summary in summaries:
+        print(summary)
+
+# Function to summarize battles
+def summarize_battles(battles):
+    summaries = []
+    for battle in battles:
+        try:
+            battle_type = battle.get('type', 'Unknown')
+            battle_time = battle.get('battleTime', 'Unknown')
+            arena_name = battle.get('arena', {}).get('name', 'Unknown Arena')
+            team = battle.get('team', [{}])[0]
+            opponent = battle.get('opponent', [{}])[0]
+            team_name = team.get('name', 'Unknown')
+            team_crowns = team.get('crowns', 0)
+            opponent_name = opponent.get('name', 'Unknown')
+            opponent_crowns = opponent.get('crowns', 0)
+            summary = (f"Type: {battle_type}, Time: {battle_time}, Arena: {arena_name}, "
+                       f"Team: {team_name} ({team_crowns} crowns) vs "
+                       f"Opponent: {opponent_name} ({opponent_crowns} crowns)")
+            summaries.append(summary)
+        except Exception as e:
+            print(f"Error summarizing battle: {e}")
+    return summaries
 
 # Function to log player data
 def log_player_data(clan_data, log_file='clan_log.json'):
@@ -149,6 +195,9 @@ def main():
 
     # Display join dates
     display_join_dates()
+
+    # Retrieve and print the battle log for the specified player
+    get_player_battlelog(player_id)
 
 # Entry point of the script
 if __name__ == "__main__":    
