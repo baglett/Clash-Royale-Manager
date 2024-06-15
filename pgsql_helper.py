@@ -1,6 +1,6 @@
 import os
 import psycopg2
-from psycopg2 import sql
+from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 
 class PgSQLHelper:
@@ -20,7 +20,8 @@ class PgSQLHelper:
                 port=self.port,
                 database=self.database,
                 user=self.user,
-                password=self.password
+                password=self.password,
+                cursor_factory=RealDictCursor  # Ensure results are returned as dictionaries
             )
             print("Connection to PostgreSQL DB successful")
         except Exception as e:

@@ -48,9 +48,9 @@ def get_player_battlelog(player_id):
     data = json.loads(response)
     
     # Print the battle log data
-    print("Player Battle Log")
-    print("=================")
-    print(json.dumps(data, indent=4))
+    # print("Player Battle Log")
+    # print("=================")
+    # print(json.dumps(data, indent=4))
 
     # Summarize and print each battle
     summaries = summarize_battles(data)
@@ -115,10 +115,10 @@ def display_join_dates(log_file='clan_log.json'):
         print("No log file found.")
         return
 
-    print("Player Join Dates")
-    print("=================")
-    for player_tag, player_data in log_data.items():
-        print(f"Name: {player_data['name']}, Tag: {player_tag}, Join Date: {player_data['join_date']}, Last Seen: {player_data['last_seen']}, Trophies: {player_data['trophies']}")
+    # print("Player Join Dates")
+    # print("=================")
+    # for player_tag, player_data in log_data.items():
+    #     print(f"Name: {player_data['name']}, Tag: {player_tag}, Join Date: {player_data['join_date']}, Last Seen: {player_data['last_seen']}, Trophies: {player_data['trophies']}")
 
 def display_clan_info(clan_data):
     print("Clan Information")
