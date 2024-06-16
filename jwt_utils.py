@@ -8,7 +8,10 @@ import urllib.request
 load_dotenv()
 
 # Environment variables
-clan_secret = os.getenv('CLAN_SECRET')
+if os.getenv('DB_ENVIRONMENT') == 'local':
+    clan_secret = os.getenv('LOCAL_CLAN_SECRET')
+else:
+    clan_secret = os.getenv('CLAN_SECRET')
 
 def generate_jwt(issuer, subject, secret_key, expiration_days=1):
     payload = {
